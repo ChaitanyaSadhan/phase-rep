@@ -75,6 +75,8 @@ duration = (length(tx))/8000
 %     rxtrim = tx(start:start+10000-1);
 %     rx = [rx; rxtrim];
 % end
+
+
 %% pass through AMR channel
 audiowrite("temp/txSignal.wav",signal_in,8000);
 [~,~] = system('ffmpeg.exe -y -i temp\txSignal.wav -ar 8000 -ab 4.75k temp\txSignal.amr');
