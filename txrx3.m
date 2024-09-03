@@ -2,7 +2,7 @@
 clear all;
 clc
 %load params.mat
-trystr = 7;
+trystr = 8;
 save_mat_str = "./audio_tx/call"+num2str(trystr)+".mat";
 
 N = 2000;
@@ -89,6 +89,9 @@ commitMessage = 'transmitting try '+num2str(trystr);
 disp(cmdout);
 [status, cmdout] = system('git push');
 disp(cmdout);
+
+%txing sound.
+soundsc(tx,8000);
 
 
 %% pass through AMR channel
