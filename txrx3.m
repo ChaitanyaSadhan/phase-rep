@@ -2,6 +2,8 @@
 clear all;
 clc
 %load params.mat
+trystr = 7;
+save_mat_str = "./audio_tx/call"+num2str(trystr)+".mat";
 
 N = 2000;
 fcin = [9];
@@ -12,7 +14,7 @@ Nc = N*rep;
 tx_sym = zeros(K,N);
 tx_symc = zeros(K,Nc);
 for k = 1: K
-    tx_sym(k,:) = randi(4,1,N)
+    tx_sym(k,:) = randi(4,1,N);
     %tx_sym(k,:) = ones(1,N);
     %tx_sym(:) = ceil((1:N)/N*4);%mod(1:N,4)+1;
     tx_symc(k,:) = repelem(tx_sym(k,:), rep);
@@ -75,6 +77,18 @@ duration = (length(tx))/8000
 %     rxtrim = tx(start:start+10000-1);
 %     rx = [rx; rxtrim];
 % end
+
+%saving matfile.
+save(save_mat_str,"signal_in", "tx", "tx_sym")
+pause(1)
+%pushing into git.
+[status, cmdout] = system('git add -A');
+disp(cmdout);
+commitMessage = 'transmitting try '+num2str(trystr);
+[status, cmdout] = system(['git commit -m "' commitMessage '"']);
+disp(cmdout);
+[status, cmdout] = system('git push');
+disp(cmdout);
 
 
 %% pass through AMR channel
