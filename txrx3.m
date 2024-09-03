@@ -51,13 +51,16 @@ signal_in = signal./max(signal)/2/16;
 actlen = size(signal_in,1);
 
 %inserting zeros.
-empty = zeros(1000,1);
+numz = 1000;
+zi = 8000;
+empty = zeros(numz,1);
 tx = [];
-for i = 1:6
-    start = (i-1)*10000+1;
-    trim = signal_in(start:start+10000-1);
+for i = 1:N*L/zi
+    start = (i-1)*zi+1;
+    trim = signal_in(start:start+zi-1);
     tx = [tx;trim;empty];
 end
+duration = (N*L+N*L/zi*numz)/8000
 
 %removing zeros.
 % rx = [];
