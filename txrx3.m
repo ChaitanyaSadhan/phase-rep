@@ -3,7 +3,7 @@ clear all;
 clc
 %load params.mat
 trystr = 8;
-save_mat_str = "./audio_tx/call"+num2str(trystr)+".mat";
+save_mat_str = "./audio_tx/call"+num2str(trystr)+"tx.mat";
 
 N = 2000;
 fcin = [9];
