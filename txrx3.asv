@@ -2,6 +2,8 @@
 clear all;
 clc
 %load params.mat
+trystr = 10;
+save_mat_str = "./audio_tx/call"+num2str(trystr)+"tx.mat";
 
 N = 2000;
 fcin = [9];
@@ -12,7 +14,7 @@ Nc = N*rep;
 tx_sym = zeros(K,N);
 tx_symc = zeros(K,Nc);
 for k = 1: K
-    tx_sym(k,:) = randi(4,1,N)
+    tx_sym(k,:) = randi(4,1,N);
     %tx_sym(k,:) = ones(1,N);
     %tx_sym(:) = ceil((1:N)/N*4);%mod(1:N,4)+1;
     tx_symc(k,:) = repelem(tx_sym(k,:), rep);
@@ -57,14 +59,16 @@ empty = zeros(numz,1);
 tx = [];
 for i = 1:ceil(N*L/zi)
     start = (i-1)*zi+1;
-    trim = signal_in(start:start+zi-1);
+    
     if i == ceil(N*L/zi)
+        trim = signal_in(start:end);
         tx=[tx;trim];
     else
-
-tx = [tx;trim;empty];
+        trim = signal_in(start:start+zi-1);
+        tx = [tx;trim;empty];
+    end
 end
-duration = (N*L+N*L/zi*numz)/8000
+duration = (length(tx))/8000
 
 %removing zeros.
 % rx = [];
@@ -73,6 +77,23 @@ duration = (N*L+N*L/zi*numz)/8000
 %     rxtrim = tx(start:start+10000-1);
 %     rx = [rx; rxtrim];
 % end
+
+%saving matfile.
+save(save_mat_str,"signal_in", "tx", "tx_sym")
+pause(1)
+%pushing into git.
+[status, cmdout] = system('git add -A');
+disp(cmdout);
+commitMessage = "transmitting try" '+num2str(trystr);
+[status, cmdout] = system(['git commit -m "' commitMessage '"']);
+disp(cmdout);
+[status, cmdout] = system('git push');
+disp(cmdout);
+
+%txing sound.
+soundsc(tx,8000);
+
+
 %% pass through AMR channel
 audiowrite("temp/txSignal.wav",signal_in,8000);
 [~,~] = system('ffmpeg.exe -y -i temp\txSignal.wav -ar 8000 -ab 4.75k temp\txSignal.amr');
