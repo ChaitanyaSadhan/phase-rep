@@ -55,12 +55,18 @@ numz = 1000;
 zi = 8000;
 empty = zeros(numz,1);
 tx = [];
-for i = 1:N*L/zi
+for i = 1:ceil(N*L/zi)
     start = (i-1)*zi+1;
-    trim = signal_in(start:start+zi-1);
-    tx = [tx;trim;empty];
+    
+    if i == ceil(N*L/zi)
+        trim = signal_in(start:end);
+        tx=[tx;trim];
+    else
+        trim = signal_in(start:start+zi-1);
+        tx = [tx;trim;empty];
+    end
 end
-duration = (N*L+N*L/zi*numz)/8000
+duration = (length(tx))/8000
 
 %removing zeros.
 % rx = [];

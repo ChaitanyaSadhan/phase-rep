@@ -51,18 +51,28 @@ signal_in = signal./max(signal)/2/16;
 actlen = size(signal_in,1);
 
 %inserting zeros.
-empty = zeros(1000,1);
+numz = 1000;
+zi = 8000;
+empty = zeros(numz,1);
 tx = [];
-for i = 1:6
-    trim = signal_in(i:i+10000-1);
-    tx = [tx;trim;empty];
+for i = 1:ceil(N*L/zi)
+    start = (i-1)*zi+1;
+    trim = signal_in(start:start+zi-1);
+    if i == ceil(N*L/zi)
+        tx=[tx;trim];
+    else
+
+tx = [tx;trim;empty];
 end
+duration = (N*L+N*L/zi*numz)/8000
 
 %removing zeros.
-rx = [];
-for i = 1:6
-    start = 
-end
+% rx = [];
+% for i = 1:6
+%     start = (i-1)*11000+1;
+%     rxtrim = tx(start:start+10000-1);
+%     rx = [rx; rxtrim];
+% end
 %% pass through AMR channel
 audiowrite("temp/txSignal.wav",signal_in,8000);
 [~,~] = system('ffmpeg.exe -y -i temp\txSignal.wav -ar 8000 -ab 4.75k temp\txSignal.amr');
