@@ -2,7 +2,7 @@
 clear all;
 clc
 %load params.mat
-trystr = 13;
+trystr = 14;
 save_mat_str = "./audio_tx/call"+num2str(trystr)+"tx.mat";
 
 N = 2000;
